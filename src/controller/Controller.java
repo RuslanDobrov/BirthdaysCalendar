@@ -10,7 +10,6 @@ public class Controller {
     private Controller() {
         this.viewMain = new ViewMain(this);
         this.model = new Model();
-        viewMain.init();
 }
 
     public static void main(String[] args) {
