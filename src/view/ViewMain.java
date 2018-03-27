@@ -4,11 +4,27 @@ import controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class ViewMain extends JFrame {
     private Controller controller;
+    private LinkedHashMap <String, ArrayList<String>> mapMonthandPeople = new LinkedHashMap<>();
+
+    {
+        mapMonthandPeople.put("Январь", new ArrayList<>());
+        mapMonthandPeople.put("Февраль", new ArrayList<>());
+        mapMonthandPeople.put("Март", new ArrayList<>());
+        mapMonthandPeople.put("Апрель", new ArrayList<>());
+        mapMonthandPeople.put("Май", new ArrayList<>());
+        mapMonthandPeople.put("Июнь", new ArrayList<>());
+        mapMonthandPeople.put("Июль", new ArrayList<>());
+        mapMonthandPeople.put("Август", new ArrayList<>());
+        mapMonthandPeople.put("Сентябрь", new ArrayList<>());
+        mapMonthandPeople.put("Октябрь", new ArrayList<>());
+        mapMonthandPeople.put("Ноябрь", new ArrayList<>());
+        mapMonthandPeople.put("Декабрь", new ArrayList<>());
+    }
 
     public ViewMain(Controller controller) {
         this.controller = controller;
@@ -75,6 +91,17 @@ public class ViewMain extends JFrame {
         menuBar.add(menuHelp);
 
         return menuBar;
+    }
+
+    /**
+     * Шаблон для расположения элемента
+    * */
+    private JPanel createMonths() {
+//        JPanel panelMonths = new JPanel();
+//
+//        return panelMonths;
+//        return new GridBagConstraints(x, y, 1, 1, 0.0, 0.9, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(2,2,2,2),0,0);
+        return null;
     }
 
     /**
