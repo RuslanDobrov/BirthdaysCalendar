@@ -5,26 +5,22 @@ import controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class ViewMain extends JFrame {
     private Controller controller;
-    private LinkedHashMap <String, ArrayList<String>> mapMonthandPeople = new LinkedHashMap<>();
-
-    {
-        mapMonthandPeople.put("Январь", new ArrayList<>());
-        mapMonthandPeople.put("Февраль", new ArrayList<>());
-        mapMonthandPeople.put("Март", new ArrayList<>());
-        mapMonthandPeople.put("Апрель", new ArrayList<>());
-        mapMonthandPeople.put("Май", new ArrayList<>());
-        mapMonthandPeople.put("Июнь", new ArrayList<>());
-        mapMonthandPeople.put("Июль", new ArrayList<>());
-        mapMonthandPeople.put("Август", new ArrayList<>());
-        mapMonthandPeople.put("Сентябрь", new ArrayList<>());
-        mapMonthandPeople.put("Октябрь", new ArrayList<>());
-        mapMonthandPeople.put("Ноябрь", new ArrayList<>());
-        mapMonthandPeople.put("Декабрь", new ArrayList<>());
-    }
+    private final String[] months = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+    private ArrayList<String> listJanuary = new ArrayList<>();
+    private ArrayList<String> listFebruary = new ArrayList<>();
+    private ArrayList<String> listMarch = new ArrayList<>();
+    private ArrayList<String> listApril = new ArrayList<>();
+    private ArrayList<String> listMay = new ArrayList<>();
+    private ArrayList<String> listJune = new ArrayList<>();
+    private ArrayList<String> listJuly = new ArrayList<>();
+    private ArrayList<String> listAugust = new ArrayList<>();
+    private ArrayList<String> listSeptember = new ArrayList<>();
+    private ArrayList<String> listOctober = new ArrayList<>();
+    private ArrayList<String> listNovember = new ArrayList<>();
+    private ArrayList<String> listDecember = new ArrayList<>();
 
     public ViewMain(Controller controller) {
         this.controller = controller;
@@ -91,17 +87,6 @@ public class ViewMain extends JFrame {
         menuBar.add(menuHelp);
 
         return menuBar;
-    }
-
-    /**
-     * Шаблон для расположения элемента
-    * */
-    private JPanel createMonths() {
-//        JPanel panelMonths = new JPanel();
-//
-//        return panelMonths;
-//        return new GridBagConstraints(x, y, 1, 1, 0.0, 0.9, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(2,2,2,2),0,0);
-        return null;
     }
 
     /**
