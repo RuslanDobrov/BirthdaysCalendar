@@ -1,8 +1,7 @@
 package view;
 
 import controller.Controller;
-import model.MonthListener;
-import model.Person;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,8 @@ import java.util.*;
 
 public class ViewMain extends JFrame {
     private Controller controller;  // экземпляр контроллера
-    private final String[] months = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};   //список месяцев
+    private Model model;  // экземпляр контроллера
+    private final static String[] MONTHS = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};   //список месяцев
     // месяцы являются ArrayList для возможности добавления новых людей
     private ArrayList<Person> listJanuary = new ArrayList<>();
     private ArrayList<Person> listFebruary = new ArrayList<>();
@@ -46,15 +46,31 @@ public class ViewMain extends JFrame {
         listMonthsAndPeople.add(listDecember);
 
         //  тестовая запись
-        listJanuary.add(new Person("Иван", new GregorianCalendar(1975, Calendar.DECEMBER, 31)));
+//        listJanuary.add(new Person("Иван", new GregorianCalendar(1975, Calendar.DECEMBER, 31)));
     }
 
     // поле для вывода информации о людях при выборе месяца
     private JTextArea peoplesTextArea;
+    private JButton editButton = new JButton("Редактировать");  // кнопка "Редактировать"
+    private JButton addButton = new JButton("Добавить");    // кнопка "Внести"
 
-    public ViewMain(Controller controller) {
+    private JList<String> monthsJList = null;
+    
+    public ViewMain(Controller controller, Model model) {
         this.controller = controller;
-        init();
+        this.model = model;
+    }
+
+    public ArrayList<ArrayList<Person>> getListMonthsAndPeople() {
+        return listMonthsAndPeople;
+    }
+
+    public String[] getMonths() {
+        return MONTHS;
+    }
+
+    public JList<String> getMonthsJList() {
+        return monthsJList;
     }
 
     /**
@@ -122,7 +138,7 @@ public class ViewMain extends JFrame {
     /**
      * Инициировать окно
      * */
-    private void init() {
+    public void init() {
         JFrame frame = new JFrame("Календарь дней рождений");
         frame.setJMenuBar(createMenuBar()); // назначаем фрейму верхнее меню
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -143,17 +159,18 @@ public class ViewMain extends JFrame {
     private JPanel createContent () {
         JPanel contents = new JPanel(); // создание списка месяцов и peoplesTextArea для людей
         contents.setLayout(new GridBagLayout());    // назначем Layout для панели
-        final JList<String> list = new JList<>(updateMonth(months, listMonthsAndPeople));   // создаем JList и заполняем его месяцами
-        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);   // размещаем месяца в два столбца
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        peoplesTextArea = new JTextArea(5, 20); // создание текстового поля для вывода информации о людях
-        list.addListSelectionListener(new MonthListener()); // подключение слушателя
+//        model.fillMonthToPeople(model.readFromFile(), getListMonthsAndPeople());
+        monthsJList = new JList<>(model.updateMonth(MONTHS, listMonthsAndPeople));   // создаем JList и заполняем его месяцами
+        monthsJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);   // размещаем месяца в два столбца
+        monthsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        peoplesTextArea = new JTextArea(6, 17); // создание текстового поля для вывода информации о людях
+        monthsJList.addListSelectionListener(new MonthListener()); // подключение слушателя
         // Подключение слушателя мыши
-        list.addMouseListener(new MouseAdapter() {
+        monthsJList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if ( e.getClickCount() == 1 ) {
                     // Получение элемента
-                    int selected = list.locationToIndex(e.getPoint());
+                    int selected = monthsJList.locationToIndex(e.getPoint());
                     int i = 0;
                     StringBuilder messageJTextArea = new StringBuilder();
                     while (i < listMonthsAndPeople.get(selected).size())
@@ -164,23 +181,18 @@ public class ViewMain extends JFrame {
         });
 
         // размещение компонентов в интерфейсе
-        contents.add(new JLabel("Выберите месяц:"), new GridBagConstraints(1,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
-        contents.add(new JScrollPane(list), new GridBagConstraints(1,2,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
-        contents.add(new JLabel("Содержимое разделов"), new GridBagConstraints(1,3,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
-        contents.add(new JScrollPane(peoplesTextArea), new GridBagConstraints(1,4,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
+        contents.add(new JLabel("Выберите месяц:"), new GridBagConstraints(0,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
+        contents.add(new JScrollPane(monthsJList), new GridBagConstraints(0,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
+        contents.add(new JLabel("Содержимое месяца:"), new GridBagConstraints(1,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
+        contents.add(new JScrollPane(peoplesTextArea), new GridBagConstraints(1,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
+
+        contents.add(editButton, new GridBagConstraints(0,2,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(10,2,10,2),0,0));
+        contents.add(addButton, new GridBagConstraints(1,2,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(10,2,10,2),0,0));
+
+        addButton.addActionListener(new AddButtonListener());
+        editButton.addActionListener(new EditButtonListener(this));
 
         return contents;
-    }
-
-
-    /**
-     * Обновляем количество людей в списке месяцов
-    * */
-    private String[] updateMonth (String[] months, ArrayList<ArrayList<Person>> listMonthsAndPeople) {
-        for (int i = 0; i < months.length; i++) {
-            months[i] = "        " + months[i] + " - " + listMonthsAndPeople.get(i).size();
-        }
-        return months;
     }
 
     /**

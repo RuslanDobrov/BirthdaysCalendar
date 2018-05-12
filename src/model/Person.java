@@ -6,9 +6,9 @@ import java.util.GregorianCalendar;
 
 public class Person {
     private String fio;
-    private GregorianCalendar dateOfBirth;
+    private Calendar dateOfBirth;
 
-    public Person(String fio, GregorianCalendar dateOfBirth) {
+    Person(String fio, GregorianCalendar dateOfBirth) {
         this.fio = fio;
         this.dateOfBirth = dateOfBirth;
     }
@@ -23,6 +23,11 @@ public class Person {
 
     public Calendar getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public String getDateOfBirthString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        return sdf.format(dateOfBirth.getTime());
     }
 
     public void setDateOfBirth(GregorianCalendar dateOfBirth) {
