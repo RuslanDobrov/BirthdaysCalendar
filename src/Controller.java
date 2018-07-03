@@ -17,7 +17,8 @@ public class Controller {
     private Person model;
     private ViewMain view;
     public static volatile Map<Integer, LinkedList<Person>> persons = new LinkedHashMap<>();
-    private static final String pathToFile = "D:\\Ruslan\\test\\1.txt";
+    private String pathToFile = "D:\\Ruslan\\test\\1.txt";
+    private static final String mainPath = "D:\\Ruslan\\test\\1.txt";
 
     public Controller(Person model, ViewMain view) {
         this.model = model;
@@ -80,10 +81,15 @@ public class Controller {
      * Удаляем строку из файла
      * */
     public void removeFromFile (String line) {
+        String[] tmp = line.split(" - ");
+        line = tmp[0];
+
         List<String> fileContent = null;
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         try {
-            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+//            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+//            Files.lines(Paths.get(pathToFile), Charset.forName("windows-1251"));
+            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), Charset.forName("Windows-1251")));
             for (int i = 0; i < fileContent.size(); i++) {
 //                System.out.println(fileContent.get(i).replace(":", " ") + " - " + line);
                 if (fileContent.get(i).replace(":"," ").trim().equals(line.trim())) {
@@ -111,7 +117,8 @@ public class Controller {
                 }
             }
 
-            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+//            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+            Files.write(Paths.get(pathToFile), fileContent, Charset.forName("Windows-1251"));
         } catch (IOException e) {
             System.out.println("Ошибка при удалении значения в файле.");
         } catch (ParseException e) {
@@ -123,10 +130,14 @@ public class Controller {
      * Обновляем информацию
      * */
     public void updatePerson (String line, Person person) {
+        String[] tmp = line.split(" - ");
+        line = tmp[0];
+
         List<String> fileContent = null;
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         try {
-            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+//            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), Charset.forName("Windows-1251")));
             for (int i = 0; i < fileContent.size(); i++) {
 //                System.out.println(fileContent.get(i).replace(":", " ") + " - " + line);
                 if (fileContent.get(i).replace(":"," ").trim().equals(line.trim())) {
@@ -156,7 +167,8 @@ public class Controller {
                 }
             }
 
-            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+//            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+            Files.write(Paths.get(pathToFile), fileContent, Charset.forName("Windows-1251"));
         } catch (IOException e) {
             System.out.println("Ошибка при удалении значения в файле.");
         } catch (ParseException e) {
@@ -176,7 +188,8 @@ public class Controller {
         List<String> fileContent = null;
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         try {
-            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+//            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), Charset.forName("Windows-1251")));
             for (int i = 0; i < fileContent.size(); i++) {
                 if (fileContent.get(i).replace(":"," ").trim().equals(line.trim())) {
                     String[] personNameAndDate = fileContent.get(i).split(":");
@@ -196,7 +209,8 @@ public class Controller {
                 }
             }
 
-            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+//            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+            Files.write(Paths.get(pathToFile), fileContent, Charset.forName("Windows-1251"));
         } catch (IOException e) {
             System.out.println("Ошибка при поиске в файле.");
         } catch (ParseException e) {
@@ -208,11 +222,14 @@ public class Controller {
 
     public void exportData () {
         JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         StringBuilder info = new StringBuilder();
         if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {
-                FileOutputStream fileStream = new FileOutputStream(fc.getSelectedFile());
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileStream, "utf-8");
+                File exportFile = new File(fc.getSelectedFile().getAbsolutePath(), "calendar.txt");
+                FileOutputStream fileStream = new FileOutputStream(exportFile);
+//                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileStream, "utf-8");
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileStream, Charset.forName("Windows-1251"));
                 for (Map.Entry<Integer, LinkedList<Person>> pair : persons.entrySet()) {
                     for (int i = 0; i < pair.getValue().size(); i++) {
                         info.append(pair.getValue().get(i).toStringForExport());
@@ -227,8 +244,75 @@ public class Controller {
                 System.out.println("Что-то пошло не так...");
             }
         }
+
+
+//        JFileChooser fc = new JFileChooser();
+////        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        StringBuilder info = new StringBuilder();
+//        if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+//            try {
+//                FileOutputStream fileStream = new FileOutputStream(fc.getSelectedFile());
+//                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileStream, "utf-8");
+//                for (Map.Entry<Integer, LinkedList<Person>> pair : persons.entrySet()) {
+//                    for (int i = 0; i < pair.getValue().size(); i++) {
+//                        info.append(pair.getValue().get(i).toStringForExport());
+//                        info.append(System.getProperty("line.separator"));
+//                    }
+//                }
+//                outputStreamWriter.write(info.toString());
+//                outputStreamWriter.flush();
+//                outputStreamWriter.close();
+//            }
+//            catch (Exception ex) {
+//                System.out.println("Что-то пошло не так...");
+//            }
+//        }
     }
 
+    public void importData () {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+            PrintWriter pw = null;
+            try {
+                pw = new PrintWriter(pathToFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            pw.close();
+            for (Map.Entry<Integer, LinkedList<Person>> pair : persons.entrySet()) {
+               pair.getValue().clear();
+            }
+
+            Map<String, Calendar> infoFromFile = readFromFile(fc.getSelectedFile().getAbsolutePath());
+            fillMonthToPeople(infoFromFile);
+            for (Map.Entry<String, Calendar> pair : infoFromFile.entrySet()) {
+                writeToFile(pair.getKey() + ":" + convertDateToFormatString(pair.getValue()));
+            }
+
+        }
+        updateMonth();
+
+//        JFileChooser fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//        if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//            System.out.println("You chose to open this directory: " +
+//                    fc.getSelectedFile().getAbsolutePath());
+//        }
+
+
+//        if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+//            try {
+//                FileOutputStream fileStream = new FileOutputStream(fc.getSelectedFile());
+//                ObjectOutputStream os = new ObjectOutputStream(fileStream);
+//                os.writeObject(что хотите сохранить);
+//            }
+//            catch (Exception e) {
+//                System.out.println("Что-то пошло не так...");
+//            }
+//        }
+    }
 
     /**
      * Метод для печати
@@ -295,7 +379,8 @@ public class Controller {
             try
             {
                 // открываем поток для записи
-                BufferedWriter bw = new BufferedWriter(new FileWriter(pathToFile, true));
+//                BufferedWriter bw = new BufferedWriter(new FileWriter(pathToFile, true), StandardCharsets.UTF_8);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathToFile, true), "Windows-1251"));
                 // пишем данные
                 bw.write(text + System.lineSeparator());
                 // закрываем поток
@@ -319,7 +404,11 @@ public class Controller {
     /**
      * Читаем строки из файла
      * */
-    public Map<String, Calendar> readFromFile() {
+    public Map<String, Calendar> readFromFile(String ... paths) {
+        if (paths.length > 0) {
+            pathToFile = paths[0];
+        }
+
         Map<String, Calendar> mapNameAndBirthday = new TreeMap<>();
         // проверяем наличие файла для чтения
         Path path = Paths.get(pathToFile);
@@ -327,10 +416,13 @@ public class Controller {
         if (Files.exists(path)) {
             try {
                 FileInputStream fstream = new FileInputStream(pathToFile);
-                BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+//                BufferedReader br = new BufferedReader(new InputStreamReader(fstream, StandardCharsets.UTF_8));
+                BufferedReader br = new BufferedReader(new InputStreamReader(fstream, "Windows-1251"));
                 String strLine;
                 while ((strLine = br.readLine()) != null){
-                    mapNameAndBirthday.putAll(convertStingToMap(strLine));
+                    if (!strLine.isEmpty() && strLine.contains(":")) {
+                        mapNameAndBirthday.putAll(convertStingToMap(strLine));
+                    }
                 }
             } catch (IOException e){
                 System.out.println("Ошибка чтения файла.");
@@ -344,6 +436,8 @@ public class Controller {
             System.out.println(key + ":" + convertDateToFormatString(value));
         }
 
+        pathToFile = mainPath;
+
         return mapNameAndBirthday;
     }
 
@@ -353,6 +447,10 @@ public class Controller {
     public Map<String, Calendar> convertStingToMap (String text) {
         Map<String, Calendar> mapNameAndBirthday = new TreeMap<>();
         String[] nameAndBirthday = text.split(":");
+
+//            String str = new String(nameAndBirthday[0].getBytes());
+//            mapNameAndBirthday.put(str, convertStringToCalendar(nameAndBirthday[1]));
+
         mapNameAndBirthday.put(nameAndBirthday[0], convertStringToCalendar(nameAndBirthday[1]));
         return mapNameAndBirthday;
     }
@@ -393,50 +491,50 @@ public class Controller {
             persons.get(month).add(new Person(name, new GregorianCalendar(year, month, day)));
         }
     }
-
-    /**
-     * Обновляем количество людей в списке месяцов
-     * */
-    public String[] updateMonth (String[] months, ArrayList<ArrayList<Person>> listMonthsAndPeople) {
-        String [] updateMonths = new String[12];
-        StringBuilder monthInformation = new StringBuilder();
-        for (int i = 0; i < months.length; i++) {
-            monthInformation.append("  ").append(months[i]).append(" - ").append(listMonthsAndPeople.get(i).size()).append("  ");
-            updateMonths[i] = monthInformation.toString();
-            monthInformation.setLength(0);
-        }
-        return updateMonths;
-    }
-
-    /**
-     * Заменяем строку в файле
-     * */
-    public void updateInfomation(String source, String replace) {
-        List<String> fileContent = null;
-        try {
-            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
-            for (int i = 0; i < fileContent.size(); i++) {
-                if (fileContent.get(i).replace(":"," ").equals(source)) {
-                    fileContent.set(i, replace);
-                    break;
-                }
-            }
-
-            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            System.out.println("Ошибка при записи нового значения в файл.");
-        }
-    }
-
-    public JFormattedTextField createDateField () {
-        MaskFormatter mf = null;
-        try {
-            mf = new MaskFormatter("##.##.####");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        mf.setPlaceholderCharacter('_');
-        JFormattedTextField textField = new JFormattedTextField(mf);
-        return textField;
-    }
+//
+//    /**
+//     * Обновляем количество людей в списке месяцов
+//     * */
+//    public String[] updateMonth (String[] months, ArrayList<ArrayList<Person>> listMonthsAndPeople) {
+//        String [] updateMonths = new String[12];
+//        StringBuilder monthInformation = new StringBuilder();
+//        for (int i = 0; i < months.length; i++) {
+//            monthInformation.append("  ").append(months[i]).append(" - ").append(listMonthsAndPeople.get(i).size()).append("  ");
+//            updateMonths[i] = monthInformation.toString();
+//            monthInformation.setLength(0);
+//        }
+//        return updateMonths;
+//    }
+//
+//    /**
+//     * Заменяем строку в файле
+//     * */
+//    public void updateInfomation(String source, String replace) {
+//        List<String> fileContent = null;
+//        try {
+//            fileContent = new ArrayList<>(Files.readAllLines(Paths.get(pathToFile), StandardCharsets.UTF_8));
+//            for (int i = 0; i < fileContent.size(); i++) {
+//                if (fileContent.get(i).replace(":"," ").equals(source)) {
+//                    fileContent.set(i, replace);
+//                    break;
+//                }
+//            }
+//
+//            Files.write(Paths.get(pathToFile), fileContent, StandardCharsets.UTF_8);
+//        } catch (IOException e) {
+//            System.out.println("Ошибка при записи нового значения в файл.");
+//        }
+//    }
+//
+//    public JFormattedTextField createDateField () {
+//        MaskFormatter mf = null;
+//        try {
+//            mf = new MaskFormatter("##.##.####");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        mf.setPlaceholderCharacter('_');
+//        JFormattedTextField textField = new JFormattedTextField(mf);
+//        return textField;
+//    }
 }

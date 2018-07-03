@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Map;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+
 public class ViewMain implements View {
     JMenuBar menuBar = new JMenuBar();
     // пункты меню в панели
@@ -50,6 +52,7 @@ public class ViewMain implements View {
     private boolean isEdit = false;
     private DefaultListModel monthModel = new DefaultListModel();
     private JList<String> monthsJList = new JList<>(monthModel);
+//    private int selectedMonth = viewMain.getMonthsJList().getAnchorSelectionIndex();
 
     public boolean isAdded() {
         return isAdded;
@@ -160,6 +163,19 @@ public class ViewMain implements View {
                 "Версия 1.0.0.1\nСоздал Добров Руслан Валериевич в 2018 году\nСвязаться со мной: RuslanDobrov.RD@gmail.com",
                 "О программе",
                 JOptionPane.INFORMATION_MESSAGE, new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("resources/about_big.png")))));
+        menuImport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.importData();
+                monthModel.clear();
+                String [] months = controller.updateMonth();
+                for (int i = 0; i < months.length; i++) {
+                    monthModel.addElement(months[i]);
+                }
+
+                listModel.clear();
+            }
+        });
         menuExport.addActionListener(e -> controller.exportData());
         menuPrint.addActionListener(e -> controller.printToPrinter());
 
@@ -205,7 +221,10 @@ public class ViewMain implements View {
         // вывод окна
         frame.add(createContent(), BorderLayout.CENTER);
         frame.setVisible(true);
+//        frame.setSize(600, 321);
         frame.pack();
+        frame.setResizable(false);
+//        System.out.println("Ширина - " + frame.getWidth() + " высота - " + frame.getHeight() + " список - " + peopleJList.getWidth());
         centerFrame(frame);
     }
 
@@ -218,6 +237,11 @@ public class ViewMain implements View {
 //        monthsJList = new JList<>(model.updateMonth(MONTHS, listMonthsAndPeople));   // создаем JList и заполняем его месяцами
         monthsJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);   // размещаем месяца в два столбца
         monthsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+//        peopleJList.setLayoutOrientation(JList.VERTICAL_WRAP);   // размещаем месяца в два столбца
+//        peopleJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        peopleJList.setPrototypeCellValue("01234567890123456789012345678901234567890123456789");
+//        peopleJList.setVisibleRowCount(0);
 //        peoplesTextArea = new JTextArea(6, 17); // создание текстового поля для вывода информации о людях
 //        monthsJList.addListSelectionListener(new ListSelectionListener() {
 //            public void valueChanged(ListSelectionEvent e) {
@@ -270,11 +294,14 @@ public class ViewMain implements View {
             monthModel.addElement(months[i]);
         }
 
+        // убрать горизонтальный скролл в списке людей
+        JScrollPane scrollPanePeopleJList = new JScrollPane(peopleJList);
+        scrollPanePeopleJList.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         // размещение компонентов в интерфейсе
         contents.add(new JLabel("Выберите месяц:"), new GridBagConstraints(0,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
         contents.add(new JScrollPane(monthsJList), new GridBagConstraints(0,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
         contents.add(new JLabel("Содержимое месяца:"), new GridBagConstraints(1,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
-        contents.add(new JScrollPane(peopleJList), new GridBagConstraints(1,1,1,4,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.VERTICAL,new Insets(2,2,2,2),0,0));
+        contents.add(scrollPanePeopleJList, new GridBagConstraints(1,1,1,4,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.VERTICAL,new Insets(2,2,2,2),0,0));
 //        contents.add(new JScrollPane(peoplesTextArea), new GridBagConstraints(1,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
 
         contents.add(editButton, new GridBagConstraints(0,2,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,3,2),0,0));
@@ -335,6 +362,9 @@ public class ViewMain implements View {
             public void actionPerformed(ActionEvent e) {
                 isAdded = true;
                 ViewAdd viewAdd = new ViewAdd(ViewMain.this);
+
+                viewAdd.getFrame().setTitle("Добавить");
+
                 viewAdd.init();
             }
         });
@@ -344,6 +374,9 @@ public class ViewMain implements View {
             public void actionPerformed(ActionEvent e) {
                 isEdit = true;
                 ViewAdd viewAdd = new ViewAdd(ViewMain.this);
+
+                viewAdd.getFrame().setTitle("Редактировать");
+
                 viewAdd.init();
                 Person person = controller.getPersonFromString(peopleJList.getSelectedValue());
                 viewAdd.getNamePerson().setText(person.getName());

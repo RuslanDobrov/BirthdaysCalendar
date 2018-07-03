@@ -3,6 +3,8 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,7 +20,7 @@ public class ViewAdd extends ViewMain implements View {
     private JFormattedTextField dateTextField = View.createDateField();
     private JButton buttonSave = new JButton("Сохранить");
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-    private String addedString;
+//    private String addedString;
     private JFrame frame = new JFrame();
     public JFormattedTextField getDateTextField() {
         return dateTextField;
@@ -31,8 +33,52 @@ public class ViewAdd extends ViewMain implements View {
         this.viewMain = viewMain;
     }
 
-    public String getAddedString() {
-        return addedString;
+//    public String getAddedString() {
+//        return addedString;
+//    }
+
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    private void doWithWindowClose() {
+        frame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                viewMain.setAdded(false);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
     }
 
     @Override
@@ -43,10 +89,13 @@ public class ViewAdd extends ViewMain implements View {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
+        doWithWindowClose();
+
         // вывод окна
         frame.add(createContent(), BorderLayout.CENTER);
         frame.setVisible(true);
         frame.pack();
+        frame.setResizable(false);
         View.centerFrame(frame);
     }
 
@@ -85,13 +134,24 @@ public class ViewAdd extends ViewMain implements View {
                     }
                     if (name != null && name.length() > 0) {
                         viewMain.getController().writeToFile(name + ":" + viewMain.getController().convertDateToFormatString(date));
-                        Controller.getPersons().get(date.get(Calendar.MONTH)).add(new Person(name, date));
-                        addedString = name + " " + sdf.format(date.getTime());
+                        Person addedPerson = new Person(name, date);
+//                        Controller.getPersons().get(date.get(Calendar.MONTH)).add(new Person(name, date));
+                        Controller.getPersons().get(date.get(Calendar.MONTH)).add(addedPerson);
+//                        addedString = name + " " + sdf.format(date.getTime());
+//                        addedString = name + " " + sdf.format(date.getTime()) + " - " + ;
+//                        System.out.println(date.get(Calendar.MONTH));
+//                        System.out.println(viewMain.getMonthsJList().getSelectedIndex());
 
-                        viewMain.getListModel().addElement(addedString);
-                        int index = viewMain.getListModel().size() - 1;
-                        viewMain.getPeopleJList().setSelectedIndex(index);
-                        viewMain.getPeopleJList().ensureIndexIsVisible(index);
+                        int selectedMonth = viewMain.getMonthsJList().getSelectedIndex();
+
+                        if (date.get(Calendar.MONTH) == selectedMonth) {
+                            viewMain.getListModel().addElement(addedPerson.toStringPersonWithAge());
+                            int index = viewMain.getListModel().size() - 1;
+                            viewMain.getPeopleJList().setSelectedIndex(index);
+                            viewMain.getPeopleJList().ensureIndexIsVisible(index);
+                        }
+
+
 
                         viewMain.getMonthModel().clear();
                         String [] months = viewMain.getController().updateMonth();
@@ -99,10 +159,18 @@ public class ViewAdd extends ViewMain implements View {
                             viewMain.getMonthModel().addElement(months[i]);
                         }
 
+                        viewMain.getMonthsJList().setSelectedIndex(selectedMonth);
+
+
+                        namePerson.setText("");
+                        dateTextField.setText("");
+
+
                         JOptionPane.showMessageDialog(null,
                                 "Запись успешно внесена.",
                                 "",
                                 JOptionPane.PLAIN_MESSAGE);
+
 //                        frame.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null,
@@ -110,7 +178,7 @@ public class ViewAdd extends ViewMain implements View {
                                 "Внимание",
                                 JOptionPane.WARNING_MESSAGE);
                     }
-                    viewMain.setAdded(false);
+//                    viewMain.setAdded(false);
                 }
                 if (viewMain.isEdit()) {
                     String name = namePerson.getText();
