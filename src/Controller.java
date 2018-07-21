@@ -222,9 +222,11 @@ public class Controller {
 
     public void exportData () {
         JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Экспорт");
+        setUpdateUI(fc);
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         StringBuilder info = new StringBuilder();
-        if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (fc.showSaveDialog(view.getFrame()) == JFileChooser.APPROVE_OPTION) {
             try {
                 File exportFile = new File(fc.getSelectedFile().getAbsolutePath(), "calendar.txt");
                 FileOutputStream fileStream = new FileOutputStream(exportFile);
@@ -271,8 +273,10 @@ public class Controller {
 
     public void importData () {
         JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Импорт");
+        setUpdateUI(fc);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showOpenDialog(view.getFrame()) == JFileChooser.APPROVE_OPTION) {
 
             PrintWriter pw = null;
             try {
@@ -314,6 +318,158 @@ public class Controller {
 //        }
     }
 
+    private JFileChooser setUpdateUI(JFileChooser choose) {
+        UIManager.put("FileChooser.openButtonText", "Открыть");
+        UIManager.put("FileChooser.cancelButtonText", "Отмена");
+        UIManager.put("FileChooser.lookInLabelText", "Смотреть в");
+        UIManager.put("FileChooser.fileNameLabelText", "Имя файла");
+        UIManager.put("FileChooser.filesOfTypeLabelText", "Тип файла");
+
+        UIManager.put("FileChooser.saveButtonText", "Сохранить");
+        UIManager.put("FileChooser.saveButtonToolTipText", "Сохранить");
+        UIManager.put("FileChooser.openButtonText", "Открыть");
+        UIManager.put("FileChooser.openButtonToolTipText", "Открыть");
+        UIManager.put("FileChooser.cancelButtonText", "Отмена");
+        UIManager.put("FileChooser.cancelButtonToolTipText", "Отмена");
+
+        UIManager.put("FileChooser.lookInLabelText", "Папка");
+        UIManager.put("FileChooser.saveInLabelText", "Папка");
+//        UIManager.put("FileChooser.fileNameLabelText", "Имя файла2");
+        UIManager.put("FileChooser.filesOfTypeLabelText", "Тип файлов");
+
+        UIManager.put("FileChooser.upFolderToolTipText", "На один уровень вверх");
+        UIManager.put("FileChooser.newFolderToolTipText", "Создание новой папки");
+        UIManager.put("FileChooser.listViewButtonToolTipText", "Список");
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", "Таблица");
+        UIManager.put("FileChooser.fileNameHeaderText", "Имя");
+        UIManager.put("FileChooser.fileSizeHeaderText", "Размер");
+        UIManager.put("FileChooser.fileTypeHeaderText", "Тип");
+        UIManager.put("FileChooser.fileDateHeaderText", "Изменен");
+        UIManager.put("FileChooser.fileAttrHeaderText", "Атрибуты");
+
+        UIManager.put("FileChooser.acceptAllFileFilterText", "Все файлы");
+
+
+
+//        UIManager.put("FileChooser.foldersLabelText", "1");
+
+//        UIManager.put("FileChooser.acceptAllFileFilterText","1");
+//        UIManager.put("FileChooser.cancelButtonText","2");
+//        UIManager.put("FileChooser.cancelButtonToolTipText","3");
+//        UIManager.put("FileChooser.deleteFileButtonMnemonic","4");
+//        UIManager.put("FileChooser.deleteFileButtonText","5");
+//        UIManager.put("FileChooser.deleteFileButtonToolTipText","6");
+//        UIManager.put("FileChooser.detailsViewButtonAccessibleName","7");
+//        UIManager.put("FileChooser.detailsViewButtonToolTipText","8");
+//        UIManager.put("FileChooser.directoryDescriptionText","9");
+//        UIManager.put("FileChooser.directoryOpenButtonText","10");
+//        UIManager.put("FileChooser.directoryOpenButtonToolTipText","11");
+//        UIManager.put("FileChooser.enterFilenameLabelText","12");
+//        UIManager.put("FileChooser.fileDescriptionText","13");
+//        UIManager.put("FileChooser.fileNameLabelText","14");
+//        UIManager.put("FileChooser.filesLabelText","15");
+//        UIManager.put("FileChooser.filesOfTypeLabelText","16");
+//        UIManager.put("FileChooser.filterLabelText)","17");
+//        UIManager.put("FileChooser.foldersLabelText","18");
+//        UIManager.put("FileChooser.helpButtonText","19");
+//        UIManager.put("FileChooser.helpButtonToolTipText","20");
+//        UIManager.put("FileChooser.homeFolderAccessibleName","21");
+//        UIManager.put("FileChooser.homeFolderToolTipText","22");
+//        UIManager.put("FileChooser.listViewBackground","23");
+//        UIManager.put("FileChooser.listViewButtonAccessibleName","24");
+//        UIManager.put("FileChooser.listViewButtonToolTipText","25");
+//        UIManager.put("FileChooser.lookInLabelText","26");
+//        UIManager.put("FileChooser.newFolderAccessibleName","27");
+//        UIManager.put("FileChooser.newFolderButtonText","28");
+//        UIManager.put("FileChooser.newFolderButtonToolTipText","29");
+//        UIManager.put("FileChooser.newFolderDialogText","30");
+//        UIManager.put("FileChooser.newFolderErrorSeparator","31");
+//        UIManager.put("FileChooser.newFolderErrorText","32");
+//        UIManager.put("FileChooser.newFolderToolTipText","33");
+//        UIManager.put("FileChooser.openButtonText","34");
+//        UIManager.put("FileChooser.openButtonToolTipText","35");
+//        UIManager.put("FileChooser.openDialogTitleText","36");
+//        UIManager.put("FileChooser.other.newFolder","37");
+//        UIManager.put("FileChooser.other.newFolder.subsequent","38");
+//        UIManager.put("FileChooser.win32.newFolder","38");
+//        UIManager.put("FileChooser.win32.newFolder.subsequent","39");
+//        UIManager.put("FileChooser.pathLabelText","40");
+//        UIManager.put("FileChooser.renameFileButtonText","41");
+//        UIManager.put("FileChooser.renameFileButtonToolTipText","42");
+//        UIManager.put("FileChooser.renameFileDialogText","43");
+//        UIManager.put("FileChooser.renameFileErrorText","44");
+//        UIManager.put("FileChooser.renameFileErrorTitle","45");
+//        UIManager.put("FileChooser.saveButtonText","46");
+//        UIManager.put("FileChooser.saveButtonToolTipText","47");
+//        UIManager.put("FileChooser.saveDialogTitleText","48");
+//        UIManager.put("FileChooser.saveInLabelText","49");
+//        UIManager.put("FileChooser.updateButtonText","50");
+//        UIManager.put("FileChooser.updateButtonToolTipText","51");
+//        UIManager.put("FileChooser.upFolderAccessibleName","52");
+//        UIManager.put("FileChooser.upFolderToolTipText","53");
+
+
+
+//        UIManager.put("FileChooser.acceptAllFileFilterText","Все файлы");
+//        UIManager.put("FileChooser.cancelButtonText","Отмена");
+//        UIManager.put("FileChooser.cancelButtonToolTipText","Отмена");
+//        UIManager.put("FileChooser.deleteFileButtonText","Удалить");
+//        UIManager.put("FileChooser.deleteFileButtonToolTipText","Удалить файл");
+//        UIManager.put("FileChooser.detailsViewButtonAccessibleName","Подробно");
+//        UIManager.put("FileChooser.detailsViewButtonToolTipText","Подробно");
+//        UIManager.put("FileChooser.directoryDescriptionText","Папка");
+//        UIManager.put("FileChooser.directoryOpenButtonText","Открыть");
+//        UIManager.put("FileChooser.directoryOpenButtonToolTipText","Открыть");
+//        UIManager.put("FileChooser.enterFilenameLabelText","Имя");
+//        UIManager.put("FileChooser.fileDescriptionText","Описание");
+//        UIManager.put("FileChooser.fileNameLabelText","Имя файла");
+//        UIManager.put("FileChooser.filesLabelText","Файлы");
+//        UIManager.put("FileChooser.filesOfTypeLabelText","Типы файлов");
+//        UIManager.put("FileChooser.filterLabelText","Тип(ы) файла");
+//        UIManager.put("FileChooser.foldersLabelText","Папка");
+//        UIManager.put("FileChooser.helpButtonText","Помощь");
+//        UIManager.put("FileChooser.helpButtonToolTipText","Помощь");
+//        UIManager.put("FileChooser.homeFolderAccessibleName","Дом");
+//        UIManager.put("FileChooser.homeFolderToolTipText","Дом");
+//        UIManager.put("FileChooser.listViewButtonAccessibleName","Список");
+//        UIManager.put("FileChooser.listViewButtonToolTipText","Список");
+//        UIManager.put("FileChooser.lookInLabelText","Католог:");
+//        UIManager.put("FileChooser.newFolderAccessibleName","Создать папку");
+//        UIManager.put("FileChooser.newFolderButtonText","Создать папку");
+//        UIManager.put("FileChooser.newFolderButtonToolTipText","Создать папку");
+//        UIManager.put("FileChooser.newFolderDialogText","Создать папку");
+//        UIManager.put("FileChooser.newFolderErrorSeparator","Ошибка создания");
+//        UIManager.put("FileChooser.newFolderErrorText","Ошибка создания");
+//        UIManager.put("FileChooser.newFolderToolTipText","Создать папку");
+//        UIManager.put("FileChooser.openButtonText","Открыть");
+//        UIManager.put("FileChooser.openButtonToolTipText","Открыть");
+//        UIManager.put("FileChooser.openDialogTitleText","Открыть");
+//        UIManager.put("FileChooser.other.newFolder","Создать папку");
+//        UIManager.put("FileChooser.other.newFolder.subsequent","Создать папку");
+//        UIManager.put("FileChooser.win32.newFolder","Создать папку");
+//        UIManager.put("FileChooser.win32.newFolder.subsequent","Создать папку");
+//        UIManager.put("FileChooser.pathLabelText","Путь");
+//        UIManager.put("FileChooser.renameFileButtonText","Переименовать");
+//        UIManager.put("FileChooser.renameFileButtonToolTipText","Переименовать");
+//        UIManager.put("FileChooser.renameFileDialogText","Переименовать");
+//        UIManager.put("FileChooser.renameFileErrorText","Ошибка переименования");
+//        UIManager.put("FileChooser.renameFileErrorTitle","Ошибка переименования");
+//        UIManager.put("FileChooser.saveButtonText","Сохранить");
+//        UIManager.put("FileChooser.saveButtonToolTipText","Сохранить");
+//        UIManager.put("FileChooser.saveDialogTitleText","Сохранить");
+//        UIManager.put("FileChooser.saveInLabelText","Католог:");
+//        UIManager.put("FileChooser.updateButtonText","Обновить");
+//        UIManager.put("FileChooser.updateButtonToolTipText","Обновить");
+//        UIManager.put("FileChooser.upFolderAccessibleName","Вверх");
+//        UIManager.put("FileChooser.upFolderToolTipText","Вверх");
+
+
+
+        choose.updateUI();
+
+        return choose;
+    }
+
     /**
      * Метод для печати
      * Формируем строку и печатаем с помощью класса OutputPrinter
@@ -327,7 +483,7 @@ public class Controller {
                 String date = pair.getValue().get(i).getBirthdayInFormat();
                 int age = Calendar.getInstance().get(Calendar.YEAR) - pair.getValue().get(i).getBirthday().get(Calendar.YEAR);
                 String postfix = getPostfixAge(age);
-                printData.append(name).append(" ").append(date).append(" - ").append(age).append(postfix).append(System.getProperty("line.separator"));
+                printData.append(name).append(" ").append(date).append(" - ").append(age).append(" ").append(postfix).append(System.getProperty("line.separator"));
             }
         }
 
@@ -490,6 +646,28 @@ public class Controller {
             String name = pair.getKey();
             persons.get(month).add(new Person(name, new GregorianCalendar(year, month, day)));
         }
+    }
+
+    /**
+     * Поиск
+     * */
+    public List<String> doSearch (String searchSting) {
+        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Integer, LinkedList<Person>> pair : persons.entrySet()) {
+            for (int i = 0; i < pair.getValue().size(); i++) {
+                if (pair.getValue().get(i).getName().toLowerCase().startsWith(searchSting.toLowerCase().trim())) {
+                    String name = pair.getValue().get(i).getName();
+                    String date = pair.getValue().get(i).getBirthdayInFormat();
+                    int age = Calendar.getInstance().get(Calendar.YEAR) - pair.getValue().get(i).getBirthday().get(Calendar.YEAR);
+                    String postfix = getPostfixAge(age);
+                    sb.append(name).append(" ").append(date).append(" - ").append(age).append(" ").append(postfix);
+                    result.add(sb.toString());
+                    sb.setLength(0);
+                }
+            }
+        }
+        return result;
     }
 //
 //    /**

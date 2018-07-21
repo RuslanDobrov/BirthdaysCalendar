@@ -4,17 +4,12 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 
@@ -52,6 +47,7 @@ public class ViewMain implements View {
     private boolean isEdit = false;
     private DefaultListModel monthModel = new DefaultListModel();
     private JList<String> monthsJList = new JList<>(monthModel);
+    private JTextField search = new JTextField("Поиск",15);
 //    private int selectedMonth = viewMain.getMonthsJList().getAnchorSelectionIndex();
 
     public boolean isAdded() {
@@ -96,6 +92,10 @@ public class ViewMain implements View {
 
     public void setMonthsJList(JList<String> monthsJList) {
         this.monthsJList = monthsJList;
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 
     /**
@@ -301,7 +301,9 @@ public class ViewMain implements View {
         contents.add(new JLabel("Выберите месяц:"), new GridBagConstraints(0,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
         contents.add(new JScrollPane(monthsJList), new GridBagConstraints(0,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
         contents.add(new JLabel("Содержимое месяца:"), new GridBagConstraints(1,0,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,5,2),0,0));
-        contents.add(scrollPanePeopleJList, new GridBagConstraints(1,1,1,4,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.VERTICAL,new Insets(2,2,2,2),0,0));
+        contents.add(scrollPanePeopleJList, new GridBagConstraints(1,1,2,4,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.VERTICAL,new Insets(2,2,2,2),0,0));
+
+        contents.add(search, new GridBagConstraints(2,0,1,1,0.0,0.9,GridBagConstraints.EAST,GridBagConstraints.EAST,new Insets(2,2,2,2),0,0));
 //        contents.add(new JScrollPane(peoplesTextArea), new GridBagConstraints(1,1,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2,2,2,2),0,0));
 
         contents.add(editButton, new GridBagConstraints(0,2,1,1,0.0,0.9,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(5,2,3,2),0,0));
@@ -388,6 +390,39 @@ public class ViewMain implements View {
         removeButton.setEnabled(false);
         menuCorrection.setEnabled(false);
         menuDelete.setEnabled(false);
+
+        search.setForeground(Color.gray);
+        search.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (search.getText().equals("Поиск")) {
+                    search.setText("");
+                    search.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (search.getText().isEmpty()) {
+                    search.setForeground(Color.GRAY);
+                    search.setText("Поиск");
+                }
+            }
+        });
+        search.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                List<String> searchingStings;
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    searchingStings = controller.doSearch(search.getText());
+                    if (listModel.size() > 0) {
+                        listModel.clear();
+                    }
+                    for (int i = 0; i < searchingStings.size(); i++) {
+                        listModel.addElement(searchingStings.get(i));
+                    }
+                }
+            }
+        });
 
         return contents;
     }
