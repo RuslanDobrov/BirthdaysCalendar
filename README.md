@@ -1,3 +1,2 @@
 # BirthdaysCalendar
-Календарь дней рождений позволяет создавать список людей, на основании которого будут формироваться группы по месяцам
-и выводиться ближайший день рождения от текущей даты.
+The birthday calendar allows you to create a list of people, based on which groups will be formed by months and the closest birthday from the current date will be displayed
